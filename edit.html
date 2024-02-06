@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Display{% endblock %}
+
+{% block css %}
+    <!-- Include AdminLTE stylesheets or any additional stylesheets you need -->
+    <link rel="stylesheet" href="{% static 'adminlet-2.4.10/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+    <!-- Add any additional styles specific to this page -->
+    <style>
+        /* Your additional styles here */
+        .red {
+            color: red;
+        }
+        .green {
+            color: green;
+        }
+        /* Add a custom style for the scrollable div */
+        .scrollable-div {
+            max-height: 400px;  /* Adjust the height according to your needs */
+            overflow-y: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+    <!-- You can include breadcrumbs here if needed -->
+    <section class="content-header">
+        <h1>
+            Display
+            <small>Your Data Display</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Display</li>
+        </ol>
+    </section>
+{% endblock %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+        <!-- Your content goes here, you can use the AdminLTE box structure if needed -->
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Your Data Display</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="data_table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>LP</th>
+                            <th>Date</th>
+                            <th>Deal</th>
+                            <th>Data1</th>
+                            <th>Data2</th>
+                            <th>Data3</th>
+                            <th>Data4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in data %}
+                            <tr>
+                                <td>{{ item.LP }}</td>
+                                <td>{{ item.Date }}</td>
+                                <td>{{ item.Deal }}</td>
+                                <td class="{% if item.data1 < 0 %}red{% else %}green{% endif %}">{{ item.data1 }}</td>
+                                <td class="{% if item.data2 < 0 %}red{% else %}green{% endif %}">{{ item.data2 }}</td>
+                                <td class="{% if item.data3 < 0 %}red{% else %}blue{% endif %}">{{ item.data3 }}</td>
+                                <td class="{% if item.data4 < 0 %}red{% else %}blue{% endif %}">{{ item.data4 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </section>
+{% endblock %}
+
+{% block script %}
+    <!-- Include AdminLTE scripts or any additional scripts you need -->
+    <script src="{% static 'adminlet-2.4.10/bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'adminlet-2.4.10/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+
+    <script>
+        $(function () {
+            $('#data_table').DataTable({
+                "paging": false,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+    </script>
+{% endblock %}
