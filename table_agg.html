@@ -52,7 +52,13 @@
                 <tbody>
                     {% for item in data %}
                         <tr>
-                            <td>{{ item.aggregate_by }}</td>
+                            {% if aggregate_by == 'LP' %}
+                                <td>{{ item.LP }}</td>
+                            {% elif aggregate_by == 'Date' %}
+                                <td>{{ item.Date }}</td>
+                            {% elif aggregate_by == 'Deal' %}
+                                <td>{{ item.Deal }}</td>
+                            {% endif %}
                             <td class="{% if item.sum_data1 < 0 %}red{% else %}green{% endif %}">{{ item.sum_data1 }}</td>
                             <td class="{% if item.sum_data2 < 0 %}red{% else %}green{% endif %}">{{ item.sum_data2 }}</td>
                             <td class="{% if item.sum_data3 < 0 %}red{% else %}blue{% endif %}">{{ item.sum_data3 }}</td>
@@ -60,6 +66,7 @@
                         </tr>
                     {% endfor %}
                 </tbody>
+                
             </table>
         </div>
     </div>
@@ -82,3 +89,4 @@
     });
 </script>
 {% endblock %}
+
