@@ -1,0 +1,28 @@
+def agg_view(request):
+    # 获取下拉菜单选择的聚合维度
+    aggregate_by = request.GET.get('aggregate_by', 'LP')  # 默认以LP聚合
+
+    # 根据选择的聚合维度聚合数据
+    if aggregate_by == 'LP':
+        data = TableModel.objects.values('LP').annotate(
+            sum_data1=Sum('data1'),
+            sum_data2=Sum('data2'),
+            sum_data3=Sum('data3'),
+            sum_data4=Sum('data4'),
+        )
+    elif aggregate_by == 'Date':
+        data =TableModel.objects.values('Date').annotate(
+            sum_data1=Sum('data1'),
+            sum_data2=Sum('data2'),
+            sum_data3=Sum('data3'),
+            sum_data4=Sum('data4'),
+        )
+    else:  # Deal
+        data = TableModel.objects.values('Deal').annotate(
+            sum_data1=Sum('data1'),
+            sum_data2=Sum('data2'),
+            sum_data3=Sum('data3'),
+            sum_data4=Sum('data4'),
+        )
+
+    return render(request, 'dash/table_agg.html', {'data': data, 'aggregate_by': aggregate_by})
