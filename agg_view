@@ -26,3 +26,18 @@ def agg_view(request):
         )
 
     return render(request, 'dash/table_agg.html', {'data': data, 'aggregate_by': aggregate_by})
+
+from django.urls import path
+from .views import display_view, line_race_chart_view, chart_page, data_api,  agg_view
+
+
+app_name = 'dash'
+
+
+urlpatterns = [
+    path('display', display_view, name='display_data1'),
+    path('display2',line_race_chart_view,name = 'display_data2 '),
+    path('display3', agg_view ,name = 'display_data3'),
+    path('agg', data_api, name='data_api'),
+
+]
