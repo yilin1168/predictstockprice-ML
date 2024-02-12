@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Display{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminlte-2.4.10/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+<style>
+    .red { color: red; }
+    .green { color: green; }
+    .blue { color: blue; }
+    .scrollable-div { max-height: 400px; overflow-y: auto; }
+</style>
+{% endblock %}
+
+{% block breadcrumb %}
+<section class="content-header">
+    <h1>
+        Display
+        <small>Your Data Display</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Display</li>
+    </ol>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Choose Aggregate Dimension</h3>
+            <form action="" method="get">
+                <select name="aggregate_by" onchange="this.form.submit()">
+                    <option value="LP" {% if aggregate_by == 'LP' %}selected{% endif %}>LP</option>
+                    <option value="Date" {% if aggregate_by == 'Date' %}selected{% endif %}>Date</option>
+                    <option value="Deal" {% if aggregate_by == 'Deal' %}selected{% endif %}>Deal</option>
+                </select>
+            </form>
+        </div>
+        <div class="box-body">
+            <table id="data_table" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>{{ aggregate_by }}</th>
+                        <th>Sum of Data1</th>
+                        <th>Sum of Data2</th>
+                        <th>Sum of Data3</th>
+                        <th>Sum of Data4</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                        <tr>
+                            <td>{{ item.aggregate_by }}</td>
+                            <td class="{% if item.sum_data1 < 0 %}red{% else %}green{% endif %}">{{ item.sum_data1 }}</td>
+                            <td class="{% if item.sum_data2 < 0 %}red{% else %}green{% endif %}">{{ item.sum_data2 }}</td>
+                            <td class="{% if item.sum_data3 < 0 %}red{% else %}blue{% endif %}">{{ item.sum_data3 }}</td>
+                            <td class="{% if item.sum_data4 < 0 %}red{% else %}blue{% endif %}">{{ item.sum_data4 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'adminlte-2.4.10/bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'adminlte-2.4.10/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>
+{% endblock %}
