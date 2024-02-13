@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Display{% endblock %}
+
+{% block css %}
+<style>
+    .scrollable-div { max-height: 400px; overflow-y: auto; }
+    #main { width: 100%; height: 400px; }
+</style>
+{% endblock %}
+
+{% block breadcrumb %}
+<section class="content-header">
+    <h1>
+        Display
+        <small>Your Data Display</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Display</li>
+    </ol>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Choose Aggregate Dimension</h3>
+            <form action="" method="get">
+                <select name="aggregate_by" onchange="this.form.submit()">
+                    <option value="LP" {% if aggregate_by == 'LP' %}selected{% endif %}>LP</option>
+                    <option value="Date" {% if aggregate_by == 'Date' %}selected{% endif %}>Date</option>
+                    <option value="Deal" {% if aggregate_by == 'Deal' %}selected{% endif %}>Deal</option>
+                </select>
+            </form>
+        </div>
+        <div class="box-body">
+            <!-- ECharts Container -->
+            <div id="main"></div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<script>
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var rawData = {{ data|safe }};
+
+    var dates = rawData.map(item => item.Date);  // 或其他逻辑以获取日期列表
+
+    var series = [];
+    for (let i = 1; i <= 4; i++) {
+        series.push({
+            name: 'Data' + i,
+            type: 'line',
+            data: rawData.map(item => item[`sum_data${i}`])
+        });
+    }
+
+    var option = {
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            // 如果legend过多，可能需要调整legend的布局以适应图表
+            data: series.map(s => s.name)
+        },
+        xAxis: {
+            type: 'category',
+            data: dates
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: series
+    };
+
+    // 使用刚指定的配置项和数据显示图表
+    myChart.setOption(option);
+
+
+</script>
+{% endblock %}
