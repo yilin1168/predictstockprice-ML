@@ -47,6 +47,15 @@
 <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 <script>
     // 基于准备好的dom，初始化echarts实例
+    // // 动态决定xAxis标签
+    // var xAxisData;
+    // if (aggregate_by === 'Date') {
+    //     xAxisData = rawData.map(item => item.Date);
+    // } else {
+    //     // 如果是按LP或Deal聚合，可能需要其他逻辑来生成xAxisData
+    //     xAxisData = rawData.map(item => item[aggregate_by]);
+    // }
+    // console.log(xAxisData);
     var myChart = echarts.init(document.getElementById('main'));
 
     var rawData = {{ data|safe }};
