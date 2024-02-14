@@ -65,6 +65,11 @@ annotations.update(annotations_t)
 
     return render(request, 'dash/table_agg_line.html', {'data': data_list, 'aggregate_by': aggregate_by})
 
+
+
+
+
+# can run
 def agg_view(request):
 
     annotations = {f'sum_data{i}': Sum(f'data{i}') for i in range(1, 5)}
