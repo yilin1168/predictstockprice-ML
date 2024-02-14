@@ -31,7 +31,23 @@ def agg_view(request):
             Sum(f'data{i}'),
             output_field=DecimalField(max_digits=10, decimal_places=2)
         ) for i in range(1, 5)
+        
     }
+    
+    from some_module import Sum  # 假设 Sum 是从某个模块导入的
+
+# 对于符合 "data1", "data2" 这样命名规则的变量
+annotations_data = {f'sum_data{i}': Sum(f'data{i}') for i in range(1, 3)}
+
+# 如果 "price", "t_1", "t_2" 需要不同的处理方式，可以分别创建字典
+annotations_price = {'sum_price': Sum('price')}
+annotations_t = {f'sum_t_{i}': Sum(f't_{i}') for i in range(1, 3)}
+
+# 合并这些字典
+annotations = {}
+annotations.update(annotations_data)
+annotations.update(annotations_price)
+annotations.update(annotations_t)
 
     aggregate_by = request.GET.get('aggregate_by', 'Date')
     if aggregate_by == 'LP':
