@@ -103,13 +103,15 @@
 </script>
 {% endblock %}
 
-
 ```
 
 
 
 
 ```python
+
+path('display3', agg_view ,name = 'display_data3'),
+
 def agg_view(request):
 
     annotations = {f'data{i}': Sum(f'data{i}') for i in range(1, 5)}
