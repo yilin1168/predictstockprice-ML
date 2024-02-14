@@ -21,6 +21,34 @@ def display_view(request):
 
 ### all below are testing:
 
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField
+
+def agg_view(request):
+
+    # 使用ExpressionWrapper来确保结果有两位小数
+    annotations = {
+        f'sum_data{i}': ExpressionWrapper(
+            Sum(f'data{i}'),
+            output_field=DecimalField(max_digits=10, decimal_places=2)
+        ) for i in range(1, 5)
+    }
+
+    aggregate_by = request.GET.get('aggregate_by', 'Date')
+    if aggregate_by == 'LP':
+        data = TableModel.objects.values('Date', 'LP').annotate(**annotations).order_by('Date', 'LP')
+    elif aggregate_by == 'Deal':
+        data = TableModel.objects.values('Date', 'Deal').annotate(**annotations).order_by('Date', 'Deal')
+    else:  # 默认按Date聚合
+        data = TableModel.objects.values('Date').annotate(**annotations).order_by('Date')
+
+    # 将日期转换为字符串（如果需要）并准备数据发送到模板
+    data_list = list(data)
+    for item in data_list:
+        if 'Date' in item:
+            item['Date'] = item['Date'].strftime('%Y-%m-%d')  # 调整日期格式
+
+    return render(request, 'dash/table_agg_line.html', {'data': data_list, 'aggregate_by': aggregate_by})
+
 def agg_view(request):
 
     annotations = {f'sum_data{i}': Sum(f'data{i}') for i in range(1, 5)}
