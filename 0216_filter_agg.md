@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .models import TableModel
 from django.db.models import F
 
+
 def chart_view(request):
     # 获取URL参数
     selected_deal = request.GET.get('deal', '')
