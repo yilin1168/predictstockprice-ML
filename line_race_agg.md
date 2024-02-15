@@ -3,6 +3,7 @@
 {% load static %}
 {% block title %}Display{% endblock %}
 
+
 {% block css %}
 <style>
     .scrollable-div { max-height: 400px; overflow-y: auto; }
