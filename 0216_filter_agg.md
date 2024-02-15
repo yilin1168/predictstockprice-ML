@@ -1,4 +1,4 @@
-'''python
+```python
 from django.shortcuts import render
 from .models import TableModel
 from django.db.models import F
@@ -29,9 +29,9 @@ def chart_view(request):
     }
     return render(request, 'your_template.html', context)
 
-'''
+```
 
-'''html
+```html
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Display{% endblock %}
@@ -92,9 +92,9 @@ def chart_view(request):
             }
         }
     };
-    
+
     myChart.setOption(option);
 </script>
 {% endblock %}
-'''
+```
 
