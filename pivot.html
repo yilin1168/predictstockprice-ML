@@ -224,3 +224,71 @@ pieChart.setOption(pieOption);
 echarts.connect([lineChart, pieChart]);
 
 </script>
+
+
+
+
+
+var rawData = {{ data|safe }};
+
+// 将数据按Data1的值分组
+var groupedData = {};
+rawData.forEach(function(item) {
+    if (!groupedData[item.Data1]) {
+        groupedData[item.Data1] = [];
+    }
+    groupedData[item.Data1].push({date: item.Date, value: item.Data2});
+});
+
+// 提取并去重所有日期，确保已排序
+var dates = rawData.map(function(item) { return item.Date; });
+dates = [...new Set(dates)].sort(function(a, b) {
+    return new Date(a) - new Date(b);
+});
+
+// 补充缺失的日期数据为null
+Object.keys(groupedData).forEach(function(key) {
+    var fullData = [];
+    dates.forEach(function(date) {
+        var foundItem = groupedData[key].find(item => item.date === date);
+        if (foundItem) {
+            fullData.push(foundItem.value);
+        } else {
+            // 对于缺失的日期插入null
+            fullData.push(null);
+        }
+    });
+    // 更新groupedData为包含所有日期的完整数据
+    groupedData[key] = fullData;
+});
+
+// 创建Echarts系列数组
+var series = Object.keys(groupedData).map(function(key) {
+    return {
+        name: key,
+        type: 'line',
+        // 直接使用完整数据，已经包含null值
+        data: groupedData[key]
+    };
+});
+
+// 使用处理好的dates和series配置Echarts
+var option = {
+    tooltip: {
+        trigger: 'axis'
+    },
+    xAxis: {
+        type: 'category',
+        data: dates,
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: series,
+};
+
+
+
+
+
+
