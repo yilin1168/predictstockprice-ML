@@ -59,3 +59,35 @@
 </form>
 
 
+from django.shortcuts import render
+from .models import TableModel
+
+def chart_view(request):
+    # 获取URL参数
+    selected_deal = request.GET.get('deal', 'All')
+    selected_lp = request.GET.get('lp', 'All')
+
+    # 获取Deal和LP的所有唯一值用于下拉菜单
+    deals = TableModel.objects.values_list('Deal', flat=True).distinct()
+    lps = TableModel.objects.values_list('LP', flat=True).distinct()
+
+    # 初始化查询集
+    queryset = TableModel.objects.all()
+
+    # 应用筛选条件，除非选择了“All”
+    if selected_deal != 'All':
+        queryset = queryset.filter(Deal=selected_deal)
+    if selected_lp != 'All':
+        queryset = queryset.filter(LP=selected_lp)
+
+    # 准备数据
+    data = list(queryset.values('Date', 'Data1', 'Data2', 'Data3', 'Data4').order_by('Date'))
+
+    context = {
+        'deals': deals,
+        'lps': lps,
+        'selected_deal': selected_deal,
+        'selected_lp': selected_lp,
+        'data': data,
+    }
+    return render(request, 'your_template.html', context)
