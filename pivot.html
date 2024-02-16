@@ -91,3 +91,77 @@ def chart_view(request):
         'data': data,
     }
     return render(request, 'your_template.html', context)
+    
+    
+    
+    
+    
+    
+    
+<script>
+var lineChart = echarts.init(document.getElementById('lineChart'));
+var pieChart = echarts.init(document.getElementById('pieChart'));
+
+// 示例数据
+var rawData = {{ data|safe }};
+var dates = rawData.map(function(item) { return item.Date; });
+var data1 = rawData.map(function(item) { return item.Data1; });
+var data2 = rawData.map(function(item) { return item.Data2; });
+
+// 配置折线图
+var lineOption = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross'
+        },
+        formatter: function(params) {
+            var dataIndex = params[0].dataIndex;
+            // 假设这里简单地更新饼图数据为Data1和Data2的值
+            updatePieChart(data1[dataIndex], data2[dataIndex]);
+            return params[0].seriesName + ': ' + params[0].value;
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: dates
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: data1,
+        type: 'line',
+        smooth: true
+    }]
+};
+
+// 初始化折线图
+lineChart.setOption(lineOption);
+
+// 配置饼图
+var pieOption = {
+    series: [{
+        type: 'pie',
+        data: [
+            {value: 0, name: 'Data1'},
+            {value: 0, name: 'Data2'}
+        ]
+    }]
+};
+
+// 初始化饼图
+pieChart.setOption(pieOption);
+
+// 更新饼图数据的函数
+function updatePieChart(data1Value, data2Value) {
+    pieChart.setOption({
+        series: [{
+            data: [
+                {value: data1Value, name: 'Data1'},
+                {value: data2Value, name: 'Data2'}
+            ]
+        }]
+    });
+}
+</script>
