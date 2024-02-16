@@ -165,3 +165,62 @@ function updatePieChart(data1Value, data2Value) {
     });
 }
 </script>
+
+//Echarts example
+<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<script>
+var rawData = {{ data|safe }};
+var dates = rawData.map(item => item.Date);
+var data1 = rawData.map(item => item.Data1);
+var data2 = rawData.map(item => item.Data2);
+
+// 初始化折线图
+var lineChart = echarts.init(document.getElementById('lineChart'));
+var lineOption = {
+    tooltip: {
+        trigger: 'axis'
+    },
+    xAxis: {type: 'category', data: dates},
+    yAxis: {type: 'value'},
+    series: [
+        {type: 'line', name: 'Data1', encode: {x: 'Date', y: 'Data1'}},
+        {type: 'line', name: 'Data2', encode: {x: 'Date', y: 'Data2'}}
+    ],
+    dataset: {
+        source: rawData
+    }
+};
+lineChart.setOption(lineOption);
+
+// 初始化饼图
+var pieChart = echarts.init(document.getElementById('pieChart'));
+var pieOption = {
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    series: [
+        {
+            name: 'Data Overview',
+            type: 'pie',
+            radius: '50%',
+            data: [
+                {value: data1.reduce((a, b) => a + b, 0), name: 'Data1'},
+                {value: data2.reduce((a, b) => a + b, 0), name: 'Data2'}
+            ],
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+pieChart.setOption(pieOption);
+
+// 数据联动
+echarts.connect([lineChart, pieChart]);
+
+</script>
