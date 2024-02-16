@@ -96,5 +96,37 @@ def chart_view(request):
     myChart.setOption(option);
 </script>
 {% endblock %}
+
+var rawData = {{ data|safe }};
+
+// 将数据按Data1的值分组
+var groupedData = {};
+rawData.forEach(function(item) {
+    if (!groupedData[item.Data1]) {
+        groupedData[item.Data1] = [];
+    }
+    groupedData[item.Data1].push({date: item.Date, value: item.Data2});
+});
+
+// 创建Echarts系列数组
+var series = Object.keys(groupedData).map(function(key) {
+    // 将每组数据的Date提取出来作为X轴数据，并将Data2作为Y轴数据
+    return {
+        name: key,
+        type: 'line',
+        data: groupedData[key].map(function(item) {
+            return item.value;
+        })
+    };
+});
+
+// 提取X轴的日期数据（假设每组数据的日期都是相同的，只取第一组的日期作为X轴数据）
+var dates = rawData.map(function(item) { return item.Date; });
+
+// 去重并排序（如果后端数据已经排序，这一步可能不需要）
+dates = [...new Set(dates)].sort(function(a, b) {
+    return new Date(a) - new Date(b);
+});
+
 ```
 
