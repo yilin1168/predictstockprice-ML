@@ -491,5 +491,31 @@ var rawData = [
 var datasetSource = transformRawDataToDatasetSource(rawData);
 
 
+var rawData = [
+    {"Date": "2021-01-01", "Data1": 10, "Data2": 20},
+    {"Date": "2021-01-02", "Data1": 15, "Data2": 25},
+    {"Date": "2021-01-03", "Data1": 8, "Data2": 18}
+];
 
+// 初始化结果数组
+var dates = [];
+var data1Values = [];
+var data2Values = [];
+
+// 遍历原始数据并填充结果数组
+rawData.forEach(item => {
+    dates.push(item.Date);          // 收集所有日期
+    data1Values.push(item.Data1);   // 收集所有Data1的值
+    data2Values.push(item.Data2);   // 收集所有Data2的值
+});
+
+// 组合成目标格式
+var transformedData = [
+    dates,
+    data1Values,
+    data2Values
+];
+
+// 输出转换后的数据查看结果
+console.log(transformedData);
 
