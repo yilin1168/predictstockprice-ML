@@ -41,3 +41,21 @@
   </script>
 </body>
 </html>
+
+
+<form action="" method="get">
+    <select name="deal" onchange="this.form.submit()">
+        <option value="All" {% if selected_deal == 'All' %}selected{% endif %}>All Deals</option>
+        {% for deal in deals %}
+        <option value="{{ deal }}" {% if selected_deal == deal %}selected{% endif %}>{{ deal }}</option>
+        {% endfor %}
+    </select>
+    <select name="lp" onchange="this.form.submit()">
+        <option value="All" {% if selected_lp == 'All' %}selected{% endif %}>All LPs</option>
+        {% for lp in lps %}
+        <option value="{{ lp }}" {% if selected_lp == lp %}selected{% endif %}>{{ lp }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+
