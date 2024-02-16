@@ -291,4 +291,99 @@ var option = {
 
 
 
+<script>
+// 假设 rawData 通过某种方式已经提供
+var rawData = {{ data|safe }};
+
+// 提取 Data1 的所有唯一值作为系列名称
+var categories = [...new Set(rawData.map(item => item.Data1))];
+
+// 初始化折线图
+var lineChart = echarts.init(document.getElementById('lineChart'));
+var pieChart = echarts.init(document.getElementById('pieChart'));
+
+// 配置折线图
+var lineOption = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            }
+        }
+    },
+    legend: {
+        data: categories
+    },
+    xAxis: {
+        type: 'category',
+        data: [...new Set(rawData.map(item => item.Date))].sort(),
+        axisPointer: {
+            type: 'shadow'
+        }
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: categories.map(category => ({
+        name: category,
+        type: 'line',
+        data: rawData.filter(item => item.Data1 === category).map(item => item.Data2),
+        smooth: true
+    }))
+};
+
+// 配置饼图（初始为空）
+var pieOption = {
+    title: {
+        text: 'Data2 Distribution',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    series: [
+        {
+            name: 'Data2',
+            type: 'pie',
+            radius: '55%',
+            data: [],
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+// 设置折线图的配置项
+lineChart.setOption(lineOption);
+
+// 设置饼图的配置项
+pieChart.setOption(pieOption);
+
+// 折线图添加鼠标悬停事件监听，更新饼图数据
+lineChart.on('mouseover', function (params) {
+    // 基于当前悬停的点的日期，更新饼图数据
+    var currentDate = params.name;
+    var currentData = rawData.filter(item => item.Date === currentDate);
+    var pieData = currentData.map(item => {
+        return { value: item.Data2, name: item.Data1 };
+    });
+    pieChart.setOption({
+        series: [{
+            // 更新饼图的数据
+            data: pieData
+        }]
+    });
+});
+</script>
+
+
+
 
