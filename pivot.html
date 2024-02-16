@@ -387,3 +387,77 @@ lineChart.on('mouseover', function (params) {
 
 
 
+
+<script>
+var rawData = {{ data|safe }};
+var categories = [...new Set(rawData.map(item => item.Data1))];
+
+// 初始化折线图和饼图
+var lineChart = echarts.init(document.getElementById('lineChart'));
+var pieChart = echarts.init(document.getElementById('pieChart'));
+
+// 准备X轴数据（日期）
+var xAxisData = [...new Set(rawData.map(item => item.Date))].sort();
+
+// 准备折线图系列数据
+var seriesData = categories.map(category => ({
+    name: category,
+    type: 'line',
+    data: xAxisData.map(date => {
+        var item = rawData.find(it => it.Date === date && it.Data1 === category);
+        return item ? item.Data2 : null;
+    }),
+    smooth: true
+}));
+
+// 设置折线图的配置项
+lineChart.setOption({
+    tooltip: {
+        trigger: 'axis'
+    },
+    xAxis: {
+        type: 'category',
+        data: xAxisData
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: seriesData
+});
+
+// 更新饼图数据的函数
+function updatePieChartData(date) {
+    var pieData = categories.map(category => {
+        var item = rawData.find(it => it.Date === date && it.Data1 === category);
+        return {
+            name: category,
+            value: item ? item.Data2 : 0
+        };
+    }).filter(it => it.value > 0); // 过滤掉值为0的分类
+
+    pieChart.setOption({
+        series: [{
+            name: 'Data2 Distribution',
+            type: 'pie',
+            data: pieData
+        }]
+    });
+}
+
+// 初始化饼图数据为第一列的值
+updatePieChartData(xAxisData[0]);
+
+// 监听折线图的mouseover事件来更新饼图
+lineChart.on('mouseover', function(params) {
+    if (params.componentType === 'series') {
+        updatePieChartData(params.name);
+    }
+});
+</script>
+
+
+
+
+
+
+
