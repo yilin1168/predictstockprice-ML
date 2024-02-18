@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ECharts Example</title>
+    <!-- 引入 ECharts.js -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.3.2/echarts.min.js"></script>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 1000px;height:600px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        var rawData = [
+            {'product': '2012', 'Milk Tea': 56.5, 'Matcha Latte': 51.1},
+            {'product': '2013', 'Milk Tea': 82.1, 'Matcha Latte': 51.4},
+            {'product': '2014', 'Milk Tea': 88.7, 'Matcha Latte': 55.1}
+        ];
+
+        // 初始化source数组
+        var source = [['product']];
+
+        // 填充产品年份
+        rawData.forEach(item => {
+            source[0].push(item.product);
+        });
+
+        // 对于rawData中的每个项目
+        rawData.forEach((item, index) => {
+            // 对于每个键（除了'product'）
+            Object.keys(item).forEach(key => {
+                if (key !== 'product') {
+                    // 查找或创建对应的数组
+                    let array = source.find(row => row[0] === key);
+                    if (!array) {
+                        array = [key]; // 创建新的数组，第一个元素是键名
+                        source.push(array);
+                    }
+                    // 添加数据到正确的位置
+                    array.push(item[key]);
+                }
+            });
+        });
+        const year = source[0][1]
+
+        // 指定图表的配置项和数据
+        setTimeout(function () {
+            option = {
+                legend: {},
+                tooltip: {
+                    trigger: 'axis',
+                    showContent: false
+                },
+                dataset: {
+                    source: source 
+                },
+                xAxis: { type: 'category' },
+                yAxis: { gridIndex: 0 },
+                grid: { top: '55%' },
+                series: [
+                    {
+                        type: 'line',
+                        smooth: true,
+                        seriesLayoutBy: 'row',
+                        emphasis: { focus: 'series' }
+                    },
+                    {
+                        type: 'line',
+                        smooth: true,
+                        seriesLayoutBy: 'row',
+                        emphasis: { focus: 'series' }
+                    },
+                    {
+                        type: 'line',
+                        smooth: true,
+                        seriesLayoutBy: 'row',
+                        emphasis: { focus: 'series' }
+                    },
+                    {
+                        type: 'line',
+                        smooth: true,
+                        seriesLayoutBy: 'row',
+                        emphasis: { focus: 'series' }
+                    },
+                    {
+                        type: 'pie',
+                        id: 'pie',
+                        radius: '30%',
+                        center: ['50%', '25%'],
+                        emphasis: {
+                            focus: 'self'
+                        },
+                        label: {
+                            formatter: '{b}: {@year} ({d}%)'
+                        },
+                        encode: {
+                            itemName: 'product',
+                            value: year,
+                            tooltip: year
+                        }
+                    }
+                ]
+            };
+            myChart.on('updateAxisPointer', function (event) {
+                const xAxisInfo = event.axesInfo[0];
+                if (xAxisInfo) {
+                    const dimension = xAxisInfo.value + 1;
+                    myChart.setOption({
+                        series: {
+                            id: 'pie',
+                            label: {
+                                formatter: '{b}: {@[' + dimension + ']} ({d}%)'
+                            },
+                            encode: {
+                                value: dimension,
+                                tooltip: dimension
+                            }
+                        }
+                    });
+                }
+            });
+            myChart.setOption(option);
+        });
+    </script>
+</body>
+</html>
