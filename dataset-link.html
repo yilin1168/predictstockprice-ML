@@ -171,3 +171,49 @@ console.log(JSON.stringify(transformedData));
     </script>
 </body>
 </html>
+
+
+
+
+
+
+option = {
+    tooltip: {
+        trigger: 'axis',
+        showContent: true,
+        formatter: function (params) {
+            let result = params[0].axisValueLabel + '<br/>'; // 显示X轴的值
+            params.forEach(param => {
+                // 只有当Y值存在时才添加到tooltip中
+                if (param.data !== null && param.data !== undefined) {
+                    result += param.marker + ' ' + param.seriesName + ': ' + param.data + '<br/>';
+                }
+            });
+            // 如果结果仅包含X轴的值（即没有有效的Y值），则不显示tooltip
+            if (result === params[0].axisValueLabel + '<br/>') {
+                return '';
+            }
+            return result;
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name: 'Series 1',
+            type: 'line',
+            data: [120, 200, null, 334, 390, 330, 220] // 示例数据中的null将不会显示在tooltip中
+        },
+        // 可以添加更多的series
+    ]
+};
+
+
+
+
+
