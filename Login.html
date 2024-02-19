@@ -1,0 +1,8 @@
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+
+class UserLoginView(LoginView):
+    template_name = 'login.html'  # 指定使用的HTML模板文件
+    redirect_authenticated_user = True  # 如果用户已经登录，则重定向到主页或指定页面
+    success_url = reverse_lazy('home')  # 登录成功后的重定向URL，'home'是一个示例，应替换为实际的URL名称
+    
