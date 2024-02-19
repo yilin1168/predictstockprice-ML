@@ -6,3 +6,57 @@ class UserLoginView(LoginView):
     redirect_authenticated_user = True  # 如果用户已经登录，则重定向到主页或指定页面
     success_url = reverse_lazy('home')  # 登录成功后的重定向URL，'home'是一个示例，应替换为实际的URL名称
     
+   
+   
+   
+from django.urls import path
+from .views import UserLoginView
+
+urlpatterns = [
+    ...
+    path('login/', UserLoginView.as_view(), name='login'),
+    ...
+]
+
+
+
+{% extends "base.html" %}  <!-- 假设你有一个base.html
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">登录</button>
+    <a href="{% url 'password_reset' %}">忘记密码?</a>
+</form>
+{% endblock %}
+```
+
+
+
+# FBV
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def my_view(request):
+    # 视图逻辑
+   
+# CBV
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+class MyView(LoginRequiredMixin, View):
+    # 视图逻辑
+   
+   
+# settings.py
+
+# 登录后重定向到首页，这里假设你有一个名为'home'的路由
+LOGIN_REDIRECT_URL = 'home'
+
+# 登出后重定向到登录页面
+LOGOUT_REDIRECT_URL = 'login'
+
+
+
+
+
