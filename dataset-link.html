@@ -170,9 +170,6 @@ console.log(JSON.stringify(transformedData));
         });
     </script>
 </body>
-</html>
-
-
 
 
 
@@ -182,17 +179,17 @@ option = {
         trigger: 'axis',
         showContent: true,
         formatter: function (params) {
-            let result = params[0].axisValueLabel + '<br/>'; // 显示X轴的值
-            params.forEach(param => {
-                // 只有当Y值存在时才添加到tooltip中
-                if (param.data !== null && param.data !== undefined) {
-                    result += param.marker + ' ' + param.seriesName + ': ' + param.data + '<br/>';
-                }
-            });
-            // 如果结果仅包含X轴的值（即没有有效的Y值），则不显示tooltip
-            if (result === params[0].axisValueLabel + '<br/>') {
-                return '';
+            // 过滤掉数据值为null的系列
+            const validParams = params.filter(param => param.value != null);
+            // 如果没有有效的参数，则不显示tooltip
+            if (validParams.length === 0) {
+                return false;
             }
+            // 构建tooltip显示内容
+            let result = params[0].axisValueLabel + '<br/>';
+            validParams.forEach(param => {
+                result += param.marker + ' ' + param.seriesName + ': ' + param.value + '<br/>';
+            });
             return result;
         }
     },
@@ -207,9 +204,9 @@ option = {
         {
             name: 'Series 1',
             type: 'line',
-            data: [120, 200, null, 334, 390, 330, 220] // 示例数据中的null将不会显示在tooltip中
+            data: [120, 200, null, 334, 390, 330, 220]
         },
-        // 可以添加更多的series
+        // 更多系列数据...
     ]
 };
 
