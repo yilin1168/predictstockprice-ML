@@ -174,6 +174,7 @@ console.log(JSON.stringify(transformedData));
 
 
 
+<- customized tooltip ->
 option = {
     tooltip: {
         trigger: 'axis',
@@ -193,21 +194,6 @@ option = {
             return result;
         }
     },
-    xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: {
-        type: 'value'
-    },
-    series: [
-        {
-            name: 'Series 1',
-            type: 'line',
-            data: [120, 200, null, 334, 390, 330, 220]
-        },
-        // 更多系列数据...
-    ]
 };
 
 
