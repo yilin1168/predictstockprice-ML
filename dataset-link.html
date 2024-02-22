@@ -200,3 +200,42 @@ option = {
 
 
 
+//legend// 假设已经初始化了echarts实例为myChart
+myChart.on('legendselectchanged', function (event) {
+    // 获取所有系列的名字
+    var seriesNames = myChart.getOption().series.map(function(series) {
+        return series.name;
+    });
+
+    // 构建一个映射，用于设置系列的显示状态
+    var selected = {};
+    seriesNames.forEach(function(name) {
+        selected[name] = false; // 默认设置所有系列为不可见
+    });
+
+    // 设置被点击的图例对应的系列为可见
+    selected[event.name] = true;
+
+    // 应用更新，只显示被点击的图例对应的系列
+    myChart.dispatchAction({
+        type: 'legendSelect',
+        // 更新所有系列的选中状态
+        selected: selected
+    });
+
+    // 为了防止图例状态与系列可见性不同步，还需要隐藏其他系列
+    myChart.dispatchAction({
+        type: 'legendUnSelect',
+        // 反选其他所有系列
+        selected: selected
+    });
+});
+
+
+
+
+
+
+
+
+
