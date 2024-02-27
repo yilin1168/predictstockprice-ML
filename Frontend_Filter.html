@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chart View</title>
+</head>
+<body>
+
+<!-- 下拉菜单选择Deal -->
+<select id="deal-select">
+    <option value="">Select Deal</option>
+    <!-- 动态填充Deal选项 -->
+</select>
+
+<!-- 下拉菜单选择LP -->
+<select id="lp-select">
+    <option value="">Select LP</option>
+    <!-- 动态填充LP选项 -->
+</select>
+
+<!-- 用于展示数据的容器，例如Echarts图表容器 -->
+<div id="chart-container"></div>
+
+<!-- 引入必要的JavaScript库，例如Echarts和jQuery（如果使用） -->
+
+<script>
+// JavaScript逻辑
+</script>
+
+</body>
+</html>
+
+
+
+// 假设data变量包含了所有的数据
+var data = [
+    // 示例数据
+    {Deal: "Deal1", LP: "LP1", Date: "2021-01-01", Data1: 100, Data2: 200},
+    // 更多数据...
+];
+
+// 填充下拉列表
+function populateSelects() {
+    var deals = [...new Set(data.map(item => item.Deal))];
+    var lps = [...new Set(data.map(item => item.LP))];
+
+    var dealSelect = document.getElementById('deal-select');
+    var lpSelect = document.getElementById('lp-select');
+
+    deals.forEach(function(deal) {
+        var option = new Option(deal, deal);
+        dealSelect.add(option);
+    });
+
+    lps.forEach(function(lp) {
+        var option = new Option(lp, lp);
+        lpSelect.add(option);
+    });
+}
+
+populateSelects();
+
+// 筛选和聚合数据
+function filterAndAggregate() {
+    var selectedDeal = document.getElementById('deal-select').value;
+    var selectedLP = document.getElementById('lp-select').value;
+
+    var filteredData = data.filter(function(item) {
+        return (selectedDeal === "" || item.Deal === selectedDeal) &&
+               (selectedLP === "" || item.LP === selectedLP);
+    });
+
+    // 这里可以添加聚合逻辑，根据需求处理filteredData
+
+    // 更新图表或数据展示
+    updateChart(filteredData);
+}
+
+// 绑定下拉菜单的更改事件
+document.getElementById('deal-select').addEventListener('change', filterAndAggregate);
+document.getElementById('lp-select').addEventListener('change', filterAndAggregate);
+
+function updateChart(filteredData) {
+    // 使用Echarts或其他库更新图表
+    // 示例：
+    // echartsInstance.setOption({series: [{data: filteredData}]});
+}
+
+
