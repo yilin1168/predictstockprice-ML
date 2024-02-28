@@ -86,3 +86,51 @@ function updateChart(filteredData) {
 }
 
 
+
+
+
+
+document.getElementById('filterForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // 阻止表单的默认提交行为
+
+  const lpValue = document.getElementById('lpSelect').value;
+  const dateValue = document.getElementById('dateInput').value;
+
+  // 假设有一个函数用来处理过滤逻辑并更新界面
+  filterResults(lpValue, dateValue);
+});
+
+function filterResults(lp, date) {
+  // 根据lp和date的值进行过滤
+  // 这里可以是Ajax请求后端数据，或者是前端已有数据的筛选
+
+  // 假设我们有一些静态数据来展示如何进行过滤
+  const allResults = [
+    { lp: 'LP1', date: '2023-01-01', data: 'Data1' },
+    { lp: 'LP2', date: '2023-01-02', data: 'Data2' },
+    // 添加更多示例数据...
+  ];
+
+  const filteredResults = allResults.filter(item => {
+    const matchLP = lp === 'all' || item.lp === lp;
+    const matchDate = !date || item.date === date; // 如果没有选择日期，则忽略日期过滤
+    return matchLP && matchDate;
+  });
+
+  displayResults(filteredResults);
+}
+
+function displayResults(results) {
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = ''; // 清空之前的结果
+  results.forEach(result => {
+    const div = document.createElement('div');
+    div.textContent = `LP: ${result.lp}, Date: ${result.date}, Data: ${result.data}`;
+    resultsDiv.appendChild(div);
+  });
+}
+
+
+
+
+
