@@ -131,6 +131,78 @@ function displayResults(results) {
 }
 
 
+<!-- 筛选表单 -->
+<form id="filterForm">
+  <select name="lp" id="lpSelect">
+    <option value="all">All</option>
+    <!-- 其他LP选项 -->
+  </select>
+  <input type="date" id="dateInput" name="date">
+  <input type="submit" value="Filter">
+</form>
+
+<!-- Tabs容器 -->
+<div id="tabs"></div>
+
+<!-- Tabs内容容器 -->
+<div id="tabsContent"></div>
+
+
+document.getElementById('filterForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // 阻止表单默认提交
+
+  const lpValue = document.getElementById('lpSelect').value;
+  const dateValue = document.getElementById('dateInput').value;
+
+  // 假设fetchFilteredProducts是异步函数，从后端获取基于LP和日期筛选的产品种类
+  fetchFilteredProducts(lpValue, dateValue).then(products => {
+    createTabs(products);
+    displayTabContent(products[0].id); // 默认显示第一个产品的内容
+  });
+});
+
+function createTabs(products) {
+  const tabsContainer = document.getElementById('tabs');
+  tabsContainer.innerHTML = ''; // 清空现有Tabs
+
+  products.forEach(product => {
+    const tabButton = document.createElement('button');
+    tabButton.textContent = product.name;
+    tabButton.onclick = () => displayTabContent(product.id);
+    tabsContainer.appendChild(tabButton);
+  });
+}
+
+function displayTabContent(productId) {
+  const tabsContentContainer = document.getElementById('tabsContent');
+  tabsContentContainer.innerHTML = ''; // 清空现有内容
+
+  // 假设fetchProductData是异步函数，从后端获取指定产品ID的数据
+  fetchProductData(productId).then(data => {
+    // 创建并显示表格数据
+    const table = createTable(data);
+    tabsContentContainer.appendChild(table);
+  });
+}
+
+function createTable(data) {
+  const table = document.createElement('table');
+  // 根据数据创建表格，此处省略了表格的具体创建逻辑
+  return table;
+}
+
+// 模拟异步请求函数
+async function fetchFilteredProducts(lp, date) {
+  // 实际开发中，这里应发送请求到后端获取数据
+  return [{ id: 'product1', name: 'Product 1' }, { id: 'product2', name: 'Product 2' }];
+}
+
+async function fetchProductData(productId) {
+  // 实际开发中，这里应发送请求到后端获取指定产品的数据
+  return []; // 返回数据格式应根据实际情况设计
+}
+
+
 
 
 
