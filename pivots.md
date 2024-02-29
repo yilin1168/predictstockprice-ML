@@ -112,3 +112,17 @@ const pivot = new WebDataRocks({
 });
 
 ```
+
+
+```css
+/* 设置列宽 */
+.webdatarocks .wdr-header-cell {
+    min-width: 100px; /* 最小宽度 */
+    max-width: 200px; /* 最大宽度 */
+}
+
+/* 设置行高 */
+.webdatarocks .wdr-value-cell, .webdatarocks .wdr-header-cell {
+    height: 50px; /* 高度 */
+}
+```
