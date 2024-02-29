@@ -72,22 +72,43 @@ const pivot = new WebDataRocks({
         dataSource: {
             data: [
                 {'LP': 'LP1', 'Date': '2023-12-12', 'Value': 100},
-                {'LP': 'LP2', 'Date': '2023-12-13', 'Value': 150}
-                // 在这里添加更多数据
+                {'LP': 'LP2', 'Date': '2023-12-13', 'Value': 0} // 示例数据
+                // 添加更多数据
             ]
         },
         slice: {
             rows: [
-                {uniqueName: "LP"} // 将“LP”字段作为行标签
+                {uniqueName: "LP"}
             ],
             columns: [
-                {uniqueName: "Date"} // 将“Date”字段作为列标签
+                {uniqueName: "Date"}
             ],
             measures: [
-                // 定义聚合器
-                {uniqueName: "Value", aggregation: "sum"} // 对“Value”字段求和
+                {uniqueName: "Value", aggregation: "sum", format: "twoDecimalPlaces"}
             ]
-        }
+        },
+        formats: [
+            {
+                name: "twoDecimalPlaces",
+                decimalPlaces: 2, // 保留两位小数
+                // 这里可以添加更多格式化选项
+                // 条件格式化部分可以在此定义，但更推荐使用下面的方法进行高级配置
+            }
+        ],
+        // 使用条件格式化来改变值为0的单元格颜色
+        conditions: [
+            {
+                formula: "#value == 0",
+                measure: "Value",
+                format: {
+                    backgroundColor: "#FF0000", // 红色背景
+                    color: "#FFFFFF", // 白色文字
+                    fontFamily: "Arial",
+                    fontSize: "12px"
+                }
+            }
+        ]
     }
 });
+
 ```
