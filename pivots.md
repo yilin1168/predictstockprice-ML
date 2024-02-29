@@ -61,3 +61,33 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 ```
+
+
+```javascript
+//webDataRocks
+const pivot = new WebDataRocks({
+    container: "#wdr-component",
+    toolbar: true,
+    report: {
+        dataSource: {
+            data: [
+                {'LP': 'LP1', 'Date': '2023-12-12', 'Value': 100},
+                {'LP': 'LP2', 'Date': '2023-12-13', 'Value': 150}
+                // 在这里添加更多数据
+            ]
+        },
+        slice: {
+            rows: [
+                {uniqueName: "LP"} // 将“LP”字段作为行标签
+            ],
+            columns: [
+                {uniqueName: "Date"} // 将“Date”字段作为列标签
+            ],
+            measures: [
+                // 定义聚合器
+                {uniqueName: "Value", aggregation: "sum"} // 对“Value”字段求和
+            ]
+        }
+    }
+});
+```
