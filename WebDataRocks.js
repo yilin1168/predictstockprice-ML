@@ -19,3 +19,9 @@ function nullToZeroFormatter(row, column, value) {
     "options": {
         // 其他选项配置
     }
+
+
+const jsonData = JSON.stringify(rawData);
+const sizeInBytes = new TextEncoder().encode(jsonData).length;
+const sizeInKilobytes = sizeInBytes / 1024;
+console.log(`Approximate size of rawData: ${sizeInKilobytes} KB`);
