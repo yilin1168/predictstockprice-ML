@@ -204,5 +204,17 @@ async function fetchProductData(productId) {
 
 
 
+const jsonString = JSON.stringify(rawData);
+
+// 计算字符串的字节大小
+const sizeInBytes = new Blob([jsonString]).size;
+const sizeInKilobytes = sizeInBytes / 1024;
+const sizeInMegabytes = sizeInKilobytes / 1024;
+
+console.log(`Data size: ${sizeInBytes} bytes`);
+console.log(`Data size: ${sizeInKilobytes} KB`);
+console.log(`Data size: ${sizeInMegabytes} MB`);
+
+
 
 
