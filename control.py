@@ -42,46 +42,59 @@ urlpatterns = [
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Run Script</title>
+    <title>Run Script and Display Output</title>
 </head>
 <body>
+    <input type="text" id="script-path" placeholder="Enter path to script">
     <button id="run-script">Run Script</button>
+    <textarea id="script-output" rows="10" cols="50">Script output will be displayed here...</textarea>
     <script>
         document.getElementById('run-script').addEventListener('click', function() {
-            fetch('/run-script/')
-            .then(response => response.text())
-            .then(text => alert(text))
-            .catch(error => console.error('Error:', error));
-        });
-    </script>
-</body>
-</html>
-
-
-                 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Run Script</title>
-</head>
-<body>
-    <button id="run-script">Run Script</button>
-    <script>
-        document.getElementById('run-script').addEventListener('click', function() {
+            const scriptPath = document.getElementById('script-path').value;
             fetch('/run-script/', {
-                method: 'POST', // 或者 'GET' 如果你不需要发送数据
+                method: 'POST',
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest', // 重要: Django检查这个来识别AJAX请求
+                    'X-Requested-With': 'XMLHttpRequest',
                     'Content-Type': 'application/json',
-                    // CSRF Token，根据你的Django配置可能需要添加
                 },
-                body: JSON.stringify({/* 如果需要发送数据 */})
+                body: JSON.stringify({ path: scriptPath })
             })
             .then(response => response.json())
-            .then(data => alert(data.message))
+            .then(data => {
+                document.getElementById('script-output').value = data.message;
+            })
             .catch(error => console.error('Error:', error));
         });
     </script>
 </body>
 </html>
+
+
+#views.py again
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from subprocess import Popen, PIPE
+import json
+
+@csrf_exempt
+def run_script(request):
+    if request.method == "POST":
+        # 从请求体中获取脚本路径
+        data = json.loads(request.body)
+        script_path = data.get('path')
+
+        # 对脚本路径进行安全性检查（这里需要实现具体的安全检查逻辑）
+        # ...
+
+        # 以管道形式执行脚本并捕获输出
+        process = Popen(script_path, stdout=PIPE, stderr=PIPE, shell=True)
+        stdout, stderr = process.communicate()
+
+        # 将标准输出和错误输出合并为响应消息
+        response_message = stdout.decode() + stderr.decode()
+
+        return JsonResponse({"message": response_message})
+    else:
+        # 如果是GET请求，渲染模板
+        return render(request, 'yourapp/template.html')
 
