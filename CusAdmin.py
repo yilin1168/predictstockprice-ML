@@ -11,3 +11,6 @@ class CustomModelAdmin(admin.ModelAdmin):
         return super().get_queryset(request).using(self.using)
 
     # 指定其他方法以适应非默认数据库...
+admin.site.register(MyModel1, CustomModelAdmin(using='db1'))
+admin.site.register(MyModel2, CustomModelAdmin(using='db2'))
+
