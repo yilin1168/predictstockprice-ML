@@ -1,0 +1,13 @@
+from django.contrib import admin
+
+class CustomModelAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        obj.save(using=self.using)
+
+    def delete_model(self, request, obj):
+        obj.delete(using=self.using)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).using(self.using)
+
+    # 指定其他方法以适应非默认数据库...
