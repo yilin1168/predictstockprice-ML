@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+
+<select id="currency-select" multiple="multiple" style="width: 50%">
+    <option value="USD">United States Dollar (USD)</option>
+    <option value="EUR">Euro (EUR)</option>
+    <option value="JPY">Japanese Yen (JPY)</option>
+    <option value="GBP">British Pound (GBP)</option>
+    <option value="AUD">Australian Dollar (AUD)</option>
+    <option value="CAD">Canadian Dollar (CAD)</option>
+    <option value="SGD">Singapore Dollar (SGD)</option>
+    <option value="SGD">Singapore Dollar (SGD)</option>
+    <option value="SGD">Singapore Dollar (SGD)</option>
+    <option value="SGD">Singapore Dollar (SGD)</option>
+    <!-- 更多选项 -->
+</select>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    var $select = $('#currency-select').select2({
+        placeholder: "Select a currency",
+        allowClear: true,
+        closeOnSelect: false
+    });
+
+    let searchTimeout;
+    $(document).on('keyup', '.select2-search__field', function() {
+        clearTimeout(searchTimeout);
+        const searchTerm = $(this).val().toUpperCase();
+
+        searchTimeout = setTimeout(() => {
+            $select.find('option').each(function() {
+                if ($(this).text().toUpperCase().indexOf(searchTerm) > -1) {
+                    $(this).prop('selected', true);
+                }
+            });
+            $select.trigger('change');
+        }, 500); // Delay in milliseconds
+    });
+});
+</script>
+
+</body>
+</html>
