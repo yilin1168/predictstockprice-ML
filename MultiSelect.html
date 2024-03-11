@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+
+<select id="currency-select" multiple="multiple" style="width: 50%">
+    <option value="USDSGD">USDSGD</option>
+    <option value="EURUSD">EURUSD</option>
+    <option value="JPYUSD">JPYUSD</option>
+    <option value="GBPUSD">GBPUSD</option>
+    <option value="AUDUSD">AUDUSD</option>
+    <option value="AUDSGD">AUDSGD</option>
+    <option value="JPYSGD">JPYSGD</option>
+</select>
+<button id="update-selected">Update Selected</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    var $select = $('#currency-select').select2({
+        placeholder: "Select a currency",
+        allowClear: true,
+        closeOnSelect: false
+    });
+
+
+    let searchTimeout;
+    var selected = [];
+    $(document).on('keyup', '.select2-search__field', function() {
+        clearTimeout(searchTimeout);
+        const searchTerm = $(this).val().toUpperCase();
+
+        searchTimeout = setTimeout(() => {
+            $select.find('option').each(function() {
+                if ($(this).text().toUpperCase().indexOf(searchTerm) > -1) {
+                    $(this).prop('selected', true);
+                }
+            });
+
+            $select.trigger('change');
+        
+        }, 500); // Delay in milliseconds
+    });
+        // 监听选择变化事件
+    // $select.on('change', function() {
+    //     selected = []; // 每次变化时重置数组
+    //     // 遍历所有选中的选项并添加其值到selected数组
+    //     $('#currency-select option:selected').each(function() {
+    //         selected.push($(this).val());
+    //     });
+    //     console.log(selected); // 打印当前选中的选项值数组，用于调试
+    // });
+        // 监听按钮点击事件
+    $('#update-selected').click(function() {
+        selected = []; // 每次点击时重置数组
+        // 遍历所有选中的选项并添加其值到selected数组
+        $('#currency-select option:selected').each(function() {
+            selected.push($(this).val());
+        });
+        console.log(selected); // 打印当前选中的选项值数组，用于调试
+    });
+});
+</script>
+
+</body>
+</html>
