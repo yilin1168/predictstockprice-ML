@@ -1,4 +1,4 @@
-//group-sort(row-col)
+//group-sort(row-col) ver2/3
 let data = [
     { name: "Item A", column: "tag1", value: 10 },
     { name: "Item B", column: "tag1", value: 20 },
@@ -44,12 +44,27 @@ Object.keys(groupedData).forEach(column => {
 // 重新组合数据
 let sortedData = [].concat(...Object.values(groupedData));
 
-console.log(sortedData);
+// 步骤 4: 针对每个column，计算所有name的value总和
+let sumsByColumn = processedData.reduce((acc, { column, value }) => {
+    if (column !== 'all') { // 排除已经是汇总的列
+        acc[column] = (acc[column] || 0) + (value || 0);
+    }
+    return acc;
+}, {});
+
+// 将每个column的总和转换成新的条目，并添加到processedData中
+Object.entries(sumsByColumn).forEach(([column, sum]) => {
+    processedData.push({ name: 'all', column, value: sum });
+});
+
+console.log(processedData);
 
 
 
 
-//group-sort all(row-col)
+
+
+//group-sort all(row-col) ver1
 let data = [
     { name: "Item A", column: "tag1", value: 10 },
     { name: "Item B", column: "tag1", value: 20 },
