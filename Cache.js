@@ -1,3 +1,24 @@
+// 检查localStorage是否已缓存数据
+let rawData = localStorage.getItem('FdataCache');
+
+if (rawData) {
+    // 从localStorage获取数据
+    rawData = JSON.parse(rawData);
+    console.log('使用缓存数据', rawData);
+} else {
+    // 使用fetch请求数据
+    fetch('/path/to/your/data/api')
+        .then(response => response.json())
+        .then(data => {
+            console.log('使用新获取的数据', data);
+            // 缓存数据到localStorage
+            localStorage.setItem('FdataCache', JSON.stringify(data));
+            // 更新rawData变量
+            rawData = data;
+        });
+}
+
+// Ver1:looks wrong
 // 假设你的数据是一个对象，例如从Django模板变量传递过来的
 var rawData = {{ Fdata| safe }};
 
