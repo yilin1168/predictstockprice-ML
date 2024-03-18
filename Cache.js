@@ -1,3 +1,50 @@
+//IndexedDB
+// 打开一个IndexedDB数据库
+var openRequest = indexedDB.open('myDatabase', 1);
+
+openRequest.onupgradeneeded = function(e) {
+    var db = e.target.result;
+    if (!db.objectStoreNames.contains('data')) {
+        db.createObjectStore('data', {keyPath: 'id'});
+    }
+};
+
+openRequest.onsuccess = function(e) {
+    var db = e.target.result;
+    var tx = db.transaction('data', 'readwrite');
+    var store = tx.objectStore('data');
+
+    fetch('/path/to/your/data/api')
+        .then(response => response.json())
+        .then(data => {
+            console.log('使用新获取的数据', data);
+            // 存储数据到IndexedDB
+            store.put({id: 'rawData', value: data});
+        })
+        .catch(err => console.error('Fetch error:', err));
+};
+
+openRequest.onerror = function(e) {
+    console.error('IndexedDB error:', e.target.error);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 检查localStorage是否已缓存数据
 let rawData = localStorage.getItem('FdataCache');
 
