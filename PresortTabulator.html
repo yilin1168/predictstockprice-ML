@@ -77,11 +77,22 @@ const columns = Object.keys(tableData[0]).map(key => {
     return {
         title: key.replace(/\./g, ' '), // 将点替换为空格，作为列标题
         field: key,
+        // formatter: function(cell, formatterParams) {
+        //     // 使用方括号语法动态访问字段名，处理带点的情况
+        //     const rowData = cell.getData();
+        //     return rowData[key]; // 直接返回对应的数据
+        // }
         formatter: function(cell, formatterParams) {
-            // 使用方括号语法动态访问字段名，处理带点的情况
-            const rowData = cell.getData();
-            return rowData[key]; // 直接返回对应的数据
-        }
+        const rowData = cell.getData();
+        const value = rowData[cell.getColumn().getField()]; // 使用cell.getColumn().getField()获取当前列的field
+    
+        // 根据值的大小决定颜色
+        const color = value > 150 ? 'green' : 'red';
+    
+        // 返回带颜色样式的HTML元素
+        return `<div style="color: ${color};">${value}</div>`;
+    }
+
     };
 });
 
