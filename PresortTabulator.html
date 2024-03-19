@@ -6,6 +6,7 @@
     <title>Tabulator Dynamic Columns</title>
     <link href="https://cdn.jsdelivr.net/npm/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <button id="downloadButton" onclick="downloadData()">下载 CSV</button>
 </head>
 <body>
 
@@ -128,7 +129,15 @@ new Tabulator("#example-table", {
     columns: columns,
     layout: "fitColumns",
 });
+window.onload = function() {
+    // 页面加载完毕后，自动点击"下载 CSV"按钮
+    document.getElementById('downloadButton').click();
+};
 
+function downloadData() {
+    table.download("csv", "data.csv");
+}
+    
 //ver2 unknown Cols
 // let rawData = [
 //     {T: 't_5', Col1: 1,Col2:2},
