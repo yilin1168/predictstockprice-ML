@@ -205,7 +205,19 @@ new Tabulator("#example-table", {
 //     layout: "fitColumns",
 // });
 
+// 检查tableData是否为空或未定义
+// const columns = tableData && tableData.length > 0 ? 
+//     Object.keys(tableData[0])
+//         .filter(key => key !== 'id') // 排除id字段
+//         .map(key => ({
+//             title: key.replace(/\./g, ' '), // 将点替换为空格，作为列标题
+//             field: key,
+//             formatter: combinedFormatter // 使用结合了两种逻辑的formatter函数
+//         })) : 
+//     [{title: "Placeholder", field: "placeholder", formatter:"plaintext"}]; // 或定义一个默认的列配置
 
+
+    
 </script>
 </body>
 </html>
