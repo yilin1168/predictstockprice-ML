@@ -65,6 +65,33 @@ function heatmapFormatter(cell, formatterParams){
 //         return value;
 //     }
 // }
+// 示例数据，可能包含未知的带点字段名
+const tableData = [
+    {"lp.xxx": 100, "data.value": 200, "anotherField": "Data 1"},
+    {"lp.xxx": 150, "data.value": 250, "anotherField": "Data 2"},
+    // 更多数据...
+];
+
+// 动态创建列定义
+const columns = Object.keys(tableData[0]).map(key => {
+    return {
+        title: key.replace(/\./g, ' '), // 将点替换为空格，作为列标题
+        field: key,
+        formatter: function(cell, formatterParams) {
+            // 使用方括号语法动态访问字段名，处理带点的情况
+            const rowData = cell.getData();
+            return rowData[key]; // 直接返回对应的数据
+        }
+    };
+});
+
+// 初始化Tabulator
+new Tabulator("#example-table", {
+    height: "auto",
+    data: tableData, // 使用示例数据
+    columns: columns, // 使用动态创建的列定义
+    layout: "fitColumns",
+});
 
 // 提取所有列名（除了T）
 let columnNames = new Set();
