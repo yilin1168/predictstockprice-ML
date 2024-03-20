@@ -38,27 +38,32 @@ df_long = df_long[['type', 'Pos', 'x', 'value']].reset_index(drop=True)
 df_long
 
 
-# 重新设置列名以匹配上面的正则表达式格式
-columns_corrected = ['type1_Pos1_x1', 'type1_Pos1_x2', 'type1_Pos1_x3', 
-                     'type2_Pos2_x1', 'type2_Pos2_x2', 'type2_Pos2_x3']
+# 创建一个示例DataFrame
+df = pd.DataFrame({
+    'ID': [1, 2],
+    'Day': ['Mon', 'Tue'],
+    'Apple': [1, 2],
+    'Banana': [3, 4],
+    'Cherry': [5, 6]
+})
 
-# 为模拟数据创建一个新的DataFrame，使用修正后的列名
-df_wide_corrected = pd.DataFrame(data, columns=columns_corrected)
+# 指定id_vars
+id_vars = ['ID', 'Day']
 
-# 使用 melt 转换宽格式为长格式
-df_long_corrected = pd.melt(df_wide_corrected, var_name='type_Pos_x', value_name='value')
+# 其他变量的列名
+value_vars = [col for col in df.columns if col not in id_vars]
 
-# 分割 'type_Pos_x' 列以提取 'type', 'Pos', 和 'x'
-df_long_corrected[['type', 'Pos', 'x']] = df_long_corrected['type_Pos_x'].str.split('_', expand=True)
+# 初始化一个空的DataFrame来存储结果
+melted_df = pd.DataFrame()
 
-# 修正 'type' 列，因为它包含了 'type' 和 'Pos' 的信息
-df_long_corrected['type'] = df_long_corrected['type'].map(lambda s: s if 'type' in s else None)
+# 遍历每一行
+for i, row in df.iterrows():
+    # 对当前行进行melt操作
+    melted_row = pd.melt(df.loc[df.index == i], id_vars=id_vars, value_vars=value_vars,
+                         var_name='Fruit', value_name='Value')
+    # 将melt后的当前行追加到结果DataFrame中
+    melted_df = pd.concat([melted_df, melted_row], ignore_index=True)
 
-# 只保留 value 为 1 的行
-df_long_corrected = df_long_corrected[df_long_corrected['value'] == 1]
+print(melted_df)
 
-# 丢弃 'type_Pos_x' 列，并调整列的顺序
-df_long_corrected = df_long_corrected[['type', 'Pos', 'x', 'value']].reset_index(drop=True)
-
-df_long_corrected
 
