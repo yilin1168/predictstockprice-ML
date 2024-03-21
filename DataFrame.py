@@ -67,3 +67,48 @@ for i, row in df.iterrows():
 print(melted_df)
 
 
+
+
+
+
+
+
+
+
+import pandas as pd
+
+file_path = 'path/to/your/file.txt'  # 将此路径替换为您的文件路径
+
+# 使用open函数打开文件
+with open(file_path, 'r') as file:
+    lines = file.readlines()
+
+# 获取列名（假设第一行是列名）
+column_names = lines[0].strip().split(',')
+
+# 初始化一个空列表来存储非重复的数据行
+data_rows = []
+
+# 遍历每一行，除了第一行以外
+for line in lines[1:]:
+    # 如果当前行不是重复的列名行，则添加到data_rows列表中
+    if line.strip() != ','.join(column_names):
+        data_rows.append(line.strip().split(','))
+
+# 使用列名和数据行创建DataFrame
+df = pd.DataFrame(data_rows, columns=column_names)
+
+print(df)
+
+
+
+
+
+
+
+
+
+
+
+
+
