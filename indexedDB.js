@@ -73,12 +73,15 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 //without DOM version
+// 假设Fdata的加载不依赖于DOMContentLoaded，例如它可能通过Ajax加载或以其他方式确保其在这段代码执行前已经可用。
+const Fdata = JSON.parse(document.getElementById('Fdata').textContent || '[]'); // 确保有个回退值以防元素或数据不可用
+
 // 数据库信息
 const dbName = "myDatabase";
 const dbVersion = 1;
-let db;
 
 // 打开数据库
+let db;
 const request = indexedDB.open(dbName, dbVersion);
 
 // 数据库升级或首次创建
@@ -93,10 +96,13 @@ request.onupgradeneeded = function(event) {
 request.onsuccess = function(event) {
     db = event.target.result;
     console.log("Database initialized successfully");
+    // 添加数据
+    addData(Fdata);
+};
 
-    // 假定有一些数据要添加
-    const exampleData = [{ id: 1, content: "Example" }];
-    addData(exampleData);
+// 打开数据库失败
+request.onerror = function(event) {
+    console.error("Database error: " + event.target.errorCode);
 };
 
 // 添加数据到IndexedDB
@@ -109,7 +115,9 @@ function addData(data) {
     });
 
     transaction.oncomplete = function() {
-        console.log("Data added successfully!");
+        console.log("All data added successfully!");
+        // 也许在这里你会想获取数据来验证或其他用途
+        getData(data => console.log("Retrieved data:", data));
     };
 
     transaction.onerror = function(event) {
@@ -117,5 +125,19 @@ function addData(data) {
     };
 }
 
-// 注意：此示例假设你不需要等待DOM元素的加载
+// 从IndexedDB获取数据
+function getData(callback) {
+    const transaction = db.transaction(["dataStore"]);
+    const store = transaction.objectStore("dataStore");
+    const request = store.getAll(); // 获取所有数据
+
+    request.onsuccess = function(event) {
+        callback(event.target.result); // 使用回调函数返回结果
+    };
+
+    request.onerror = function(event) {
+        console.error("Request error: ", event.target.error);
+    };
+}
+
 
