@@ -2,7 +2,7 @@
     {{ Fdata|safe }}
 </script>
 
-
+//DOM version
 document.addEventListener("DOMContentLoaded", function() {
     // 假定Fdata已经是一个JavaScript对象数组
     const Fdata = JSON.parse(document.getElementById('Fdata').textContent);
@@ -71,3 +71,51 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 });
+
+//without DOM version
+// 数据库信息
+const dbName = "myDatabase";
+const dbVersion = 1;
+let db;
+
+// 打开数据库
+const request = indexedDB.open(dbName, dbVersion);
+
+// 数据库升级或首次创建
+request.onupgradeneeded = function(event) {
+    db = event.target.result;
+    if (!db.objectStoreNames.contains('dataStore')) {
+        db.createObjectStore('dataStore', {keyPath: 'id'});
+    }
+};
+
+// 成功打开数据库
+request.onsuccess = function(event) {
+    db = event.target.result;
+    console.log("Database initialized successfully");
+
+    // 假定有一些数据要添加
+    const exampleData = [{ id: 1, content: "Example" }];
+    addData(exampleData);
+};
+
+// 添加数据到IndexedDB
+function addData(data) {
+    const transaction = db.transaction(["dataStore"], "readwrite");
+    const store = transaction.objectStore("dataStore");
+
+    data.forEach(item => {
+        store.add(item);
+    });
+
+    transaction.oncomplete = function() {
+        console.log("Data added successfully!");
+    };
+
+    transaction.onerror = function(event) {
+        console.error("Transaction error: ", event.target.error);
+    };
+}
+
+// 注意：此示例假设你不需要等待DOM元素的加载
+
