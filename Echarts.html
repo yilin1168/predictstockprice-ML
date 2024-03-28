@@ -1,0 +1,25 @@
+// 你可以将这个URL设置给一个<img>标签的src属性，或者用window.open在新窗口打开它
+<button id="exportButton">导出为图片</button>
+<script>
+//export as image
+var myChart = echarts.init(document.getElementById('main'));
+myChart.setOption(option);
+
+// 导出图表为图片URL
+var imageURL = myChart.getDataURL({
+    // 导出的图片类型，可以是 'png', 'jpeg'
+    type: 'png',
+    // 导出的图片质量，范围是 0 到 1
+    pixelRatio: 1,
+    // 导出的图片背景色，默认是透明的
+    backgroundColor: '#fff'
+});
+document.getElementById('exportButton').addEventListener('click', function () {
+    var imageURL = myChart.getDataURL({
+        type: 'png',
+        pixelRatio: 1,
+        backgroundColor: '#fff'
+    });
+    // 使用这个imageURL做你想做的任何事情
+});
+</script>
