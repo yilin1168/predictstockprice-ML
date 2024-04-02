@@ -1,0 +1,30 @@
+<button id="toggleControl">显示/隐藏 控制</button>
+
+<div class="content hidden">
+    <select id="mySelect">
+        <option value="option1">选项 1</option>
+        <option value="option2">选项 2</option>
+        <option value="option3">选项 3</option>
+    </select>
+    <input type="text" id="myInput" class="hidden">
+</div>
+
+<div id="selectedValue">选中的值：无</div>
+
+.hidden {
+    display: none;
+}
+
+document.getElementById('toggleControl').addEventListener('click', function() {
+    // 获取需要切换显示状态的元素
+    const content = document.querySelector('.content');
+    // 切换.hidden类
+    content.classList.toggle('hidden');
+});
+
+document.getElementById('mySelect').addEventListener('change', function() {
+    // 获取select的选中值
+    const selectedValue = this.value;
+    // 更新页面上的选中值显示
+    document.getElementById('selectedValue').textContent = '选中的值：' + selectedValue;
+});
