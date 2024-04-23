@@ -1,3 +1,9 @@
+#Kdb+ receive
+.z.ps: { show "Received data: ", string x; }
+
+
+
+
 ## insert to update sqlite(using dataframe)
 import pandas as pd
 import sqlite3
