@@ -1,3 +1,52 @@
+### as attachment1
+Sub SendSingleSheetAsAttachment()
+    Dim outlookApp As Object
+    Dim outlookMail As Object
+    Dim newWorkbook As Workbook
+    Dim sheetName As String
+    Dim tempFilePath As String
+
+    ' 指定要发送的工作表名称
+    sheetName = "Sheet1" ' 根据实际的工作表名修改
+
+    ' 创建Outlook应用实例
+    Set outlookApp = CreateObject("Outlook.Application")
+    Set outlookMail = outlookApp.CreateItem(0)
+
+    ' 复制指定工作表到新工作簿
+    ThisWorkbook.Sheets(sheetName).Copy
+    Set newWorkbook = ActiveWorkbook
+
+    ' 保存新工作簿到临时文件路径
+    tempFilePath = Environ("TEMP") & "\" & sheetName & ".xlsx"
+    newWorkbook.SaveAs Filename:=tempFilePath
+
+    ' 配置邮件参数
+    With outlookMail
+        .To = receiverEmail
+        .Subject = emailSubject
+        .Body = "Attached is the " & sheetName & " worksheet."
+        .Attachments.Add tempFilePath
+        .Send ' 发送邮件
+    End With
+
+    ' 清理和关闭新工作簿
+    newWorkbook.Close SaveChanges:=False
+    Set newWorkbook = Nothing
+
+    ' 清理Outlook对象
+    Set outlookMail = Nothing
+    Set outlookApp = Nothing
+
+    ' 可选：删除临时文件
+    Kill tempFilePath
+End Sub
+
+
+
+
+
+
 ### as attachment
 Sub SendWorkbookAsAttachment()
     Dim outlookApp As Object
