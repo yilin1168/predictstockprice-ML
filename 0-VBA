@@ -28,3 +28,48 @@ Sub SendEmailWithSheetContents()
     Set outlookMail = Nothing
     Set outlookApp = Nothing
 End Sub
+
+
+
+Sub SendEmailWithSpecificSheetContents()
+    Dim outlookApp As Object
+    Dim outlookMail As Object
+    Dim rng As Range
+    Dim strbody As String
+    Dim ws As Worksheet
+    
+    ' 创建Outlook应用实例
+    Set outlookApp = CreateObject("Outlook.Application")
+    Set outlookMail = outlookApp.CreateItem(0)
+    
+    ' 设置特定的工作表
+    Set ws = ThisWorkbook.Sheets("Sheet1")
+    
+    ' 定义要发送的区域，这里选择的是指定工作表的使用范围
+    With ws
+        Set rng = .UsedRange ' 可以根据需要调整为特定的范围
+        ' 这里需要一个循环来构建整个区域的文本内容
+        strbody = ""
+        For Each row In rng.Rows
+            For Each cell In row.Cells
+                strbody = strbody & cell.Value & "  " ' 添加额外的空格作为列之间的分隔
+            Next cell
+            strbody = strbody & vbCrLf ' 添加换行符来分隔行
+        Next row
+    End With
+    
+    ' 配置邮件参数
+    With outlookMail
+        .To = receiverEmail  ' 使用全局变量
+        .CC = ""  ' 抄送地址，如果不需要可以留空
+        .BCC = "" ' 密送地址，如果不需要可以留空
+        .Subject = emailSubject  ' 使用全局变量
+        .Body = strbody  ' 使用构建的strbody作为邮件正文
+        .Send   ' 发送邮件
+    End With
+    
+    ' 清理对象
+    Set outlookMail = Nothing
+    Set outlookApp = Nothing
+    Set ws = Nothing
+End Sub
