@@ -1,3 +1,38 @@
+### as multiple attachments
+Sub SendEmailWithMultipleAttachments()
+    Dim outlookApp As Object
+    Dim outlookMail As Object
+    Dim tempFilePath1 As String
+    Dim tempFilePath2 As String
+
+    ' 创建Outlook应用实例
+    Set outlookApp = CreateObject("Outlook.Application")
+    Set outlookMail = outlookApp.CreateItem(0)
+
+    ' 假设已经有两个文件路径
+    tempFilePath1 = "C:\Path\To\Your\FirstFile.xlsx"
+    tempFilePath2 = "C:\Path\To\Your\SecondFile.pdf"
+
+    ' 配置邮件参数
+    With outlookMail
+        .To = "receiver@example.com"
+        .Subject = "Multiple Attachments Example"
+        .Body = "Here are the attachments."
+        
+        ' 添加多个附件
+        .Attachments.Add tempFilePath1
+        .Attachments.Add tempFilePath2
+        
+        .Send ' 发送邮件
+    End With
+
+    ' 清理对象
+    Set outlookMail = Nothing
+    Set outlookApp = Nothing
+End Sub
+
+
+
 ### as attachment1
 Sub SendSingleSheetAsAttachment()
     Dim outlookApp As Object
