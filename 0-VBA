@@ -1,3 +1,30 @@
+### as attachment
+Sub SendWorkbookAsAttachment()
+    Dim outlookApp As Object
+    Dim outlookMail As Object
+    Dim strPath As String
+
+    ' 保存当前工作簿
+    strPath = ThisWorkbook.Path & "\TemporaryCopy.xlsx"
+    ThisWorkbook.SaveCopyAs strPath
+
+    ' 创建Outlook应用实例
+    Set outlookApp = CreateObject("Outlook.Application")
+    Set outlookMail = outlookApp.CreateItem(0)
+
+    ' 配置邮件参数
+    With outlookMail
+        .To = receiverEmail
+        .Subject = emailSubject
+        .Body = "请查看附件中的Excel文件。"
+        .Attachments.Add strPath
+        .Send
+    End With
+
+    ' 清理对象
+    Set outlookMail = Nothing
+    Set outlookApp = Nothing
+End Sub
 
 ### 3. 使用高级方法保留格式：生成HTML代码
 
