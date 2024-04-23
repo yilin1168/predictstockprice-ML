@@ -1,29 +1,48 @@
-Sub SendEmailWithSheetContents()
+
+### 3. 使用高级方法保留格式：生成HTML代码
+
+如果你想更精确地控制邮件中的格式，并确保它看起来尽可能接近Excel中的显示，你可以考虑生成HTML代码来模拟工作表的格式。这需要对HTML有一定的了解，因为你将需要手动创建表格、颜色和样式。
+
+```vba
+Sub SendFormattedSheetAsHTML()
     Dim outlookApp As Object
     Dim outlookMail As Object
     Dim rng As Range
-    Dim strbody As String
-    
+    Dim cell As Range
+    Dim htmlStr As String
+    Dim rowStr As String
+    Dim cellStyle As String
+
     ' 创建Outlook应用实例
     Set outlookApp = CreateObject("Outlook.Application")
     Set outlookMail = outlookApp.CreateItem(0)
-    
-    ' 定义要发送的区域，这里选择的是整个活动工作表
-    With ActiveSheet
-        Set rng = .UsedRange ' 可以根据需要调整为特定的范围
-        strbody = rng.Value ' 这里假设邮件正文是单元格的内容
-    End With
-    
-    ' 配置邮件参数
+
+    ' 设置要发送的工作表和区域
+    Set rng = ThisWorkbook.Sheets("Sheet1").UsedRange
+    htmlStr = "<html><body><table border='1'>"
+
+    ' 生成HTML表格
+    For Each row In rng.Rows
+        rowStr = "<tr>"
+        For Each cell In row.Cells
+            cellStyle = "style='background-color: " & Hex(cell.Interior.Color) & ";"
+            cellStyle = cellStyle & "color: " & Hex(cell.Font.Color) & ";"
+            cellStyle = cellStyle & "font-size: " & cell.Font.Size & "pt;'"
+            rowStr = rowStr & "<td " & cellStyle & ">" & cell.Value & "</td>"
+        Next cell
+        rowStr = rowStr & "</tr>"
+        htmlStr = htmlStr & rowStr
+    Next row
+    htmlStr = htmlStr & "</table></body></html>"
+
+    ' 发送邮件
     With outlookMail
-        .To = "receiver@example.com"  ' 收件人邮箱地址
-        .CC = ""  ' 抄送地址，如果不需要可以留空
-        .BCC = "" ' 密送地址，如果不需要可以留空
-        .Subject = "这是通过Excel VBA发送的邮件"  ' 邮件主题
-        .Body = strbody  ' 邮件正文
-        .Send   ' 发送邮件
+        .To = receiverEmail
+        .Subject = emailSubject
+        .HTMLBody = htmlStr
+        .Send
     End With
-    
+
     ' 清理对象
     Set outlookMail = Nothing
     Set outlookApp = Nothing
