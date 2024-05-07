@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Example Table</title>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px; /* 内边距还是保留一些，不要太大 */
+  text-align: left;
+  height: 20px; /* 高度设为100px，从而实现大约2:1的宽高比 */
+}
+
+</style>
+</head>
+<body>
+<table>
+  <tr>
+    <th>序号</th>
+    <th>问题</th>
+    <th>选择</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>问题 1</td>
+    <td>
+      <select>
+        <option value="A">选项 A</option>
+        <option value="B">选项 B</option>
+      </select>
+    </td>
+  </tr>
+  <!-- 根据需要复制上面的行以创建更多行 -->
+  <tr>
+    <td>7</td>
+    <td>问题 7</td>
+    <td>
+      <select>
+        <option value="A">选项 A</option>
+        <option value="B">选项 B</option>
+      </select>
+    </td>
+  </tr>
+</table>
+<button onclick="submitAnswers()">提交</button>
+<p id="result"></p>
+
+<script>
+function submitAnswers() {
+  var result = Math.floor(Math.random() * 5); // 随机生成一个0到99的数字
+  document.getElementById('result').innerText = 'Product Risk Rating  :  ' + result;
+}
+</script>
+
+</body>
+</html>
