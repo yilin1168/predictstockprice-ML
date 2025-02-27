@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>ECharts Line Graph with Django Backend</title>
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <!-- 引入 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h2>Line Graph with Client Event and Django Backend</h2>
+    <div id="line-chart" style="width: 100%; height: 600px;"></div>
+    
+    <script type="text/javascript">
+        // 初始化 ECharts
+        var chart = echarts.init(document.getElementById('line-chart'));
+
+        // 配置 Line Graph
+        var option = {
+            title: {
+                text: 'Line Graph Example'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Sales',
+                type: 'line',
+                data: [120, 200, 150, 80, 70, 110, 130]
+            }]
+        };
+
+        // 渲染图表
+        chart.setOption(option);
+
+        // 注册点击事件
+        chart.on('click', function (params) {
+            var x_value = params.name;
+            var y_value = params.value;
+
+            // 向后端请求详细信息
+            $.ajax({
+                url: "{% url 'get_point_details' %}",
+                method: "GET",
+                data: {
+                    x: x_value,
+                    y: y_value
+                },
+                success: function(response) {
+                    // 在图表上显示详细信息 Box
+                    chart.setOption({
+                        graphic: {
+                            type: 'group',
+                            left: params.event.offsetX + 10,
+                            top: params.event.offsetY - 50,
+                            children: [
+                                {
+                                    type: 'rect',
+                                    left: 'center',
+                                    top: 'center',
+                                    shape: {
+                                        width: 150,
+                                        height: 60
+                                    },
+                                    style: {
+                                        fill: '#fff',
+                                        stroke: '#555',
+                                        lineWidth: 2,
+                                        shadowBlur: 4,
+                                        shadowOffsetX: 3,
+                                        shadowOffsetY: 3,
+                                        shadowColor: 'rgba(0, 0, 0, 0.3)'
+                                    }
+                                },
+                                {
+                                    type: 'text',
+                                    left: 'center',
+                                    top: 'center',
+                                    style: {
+                                        text: `详细信息：\n${response.info}`,
+                                        fill: '#333',
+                                        font: '14px Arial'
+                                    }
+                                }
+                            ]
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
