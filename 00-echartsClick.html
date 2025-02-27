@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>ECharts Line Graph with Fake Data</title>
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<body>
+    <h2>Line Graph with Click Event and Fake Data</h2>
+    <div id="line-chart" style="width: 100%; height: 600px;"></div>
+
+    <script type="text/javascript">
+        // 初始化 ECharts
+        var chart = echarts.init(document.getElementById('line-chart'));
+
+        // 配置 Line Graph
+        var option = {
+            title: {
+                text: 'Line Graph Example'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Sales',
+                type: 'line',
+                data: [120, 200, 150, 80, 70, 110, 130]
+            }]
+        };
+
+        // 渲染图表
+        chart.setOption(option);
+
+        // Fake 数据生成函数
+        function getFakeDetails(x, y) {
+            var fakeDetails = {
+                x: x,
+                y: y,
+                info: `x=${x}, y=${y}\n随机详情：${Math.floor(Math.random() * 1000)}`
+            };
+            return fakeDetails;
+        }
+
+        // 注册点击事件
+        chart.on('click', function (params) {
+            var x_value = params.name;
+            var y_value = params.value;
+
+            // 模拟获取假数据
+            var fakeData = getFakeDetails(x_value, y_value);
+
+            // 清除之前的 Box
+            chart.setOption({ graphic: [] });
+
+            // 在图表上显示详细信息 Box
+            chart.setOption({
+                graphic: {
+                    type: 'group',
+                    left: params.event.offsetX + 10,
+                    top: params.event.offsetY - 50,
+                    children: [
+                        {
+                            type: 'rect',
+                            left: 'center',
+                            top: 'center',
+                            shape: {
+                                width: 150,
+                                height: 60
+                            },
+                            style: {
+                                fill: '#fff',
+                                stroke: '#555',
+                                lineWidth: 2,
+                                shadowBlur: 4,
+                                shadowOffsetX: 3,
+                                shadowOffsetY: 3,
+                                shadowColor: 'rgba(0, 0, 0, 0.3)'
+                            }
+                        },
+                        {
+                            type: 'text',
+                            left: 'center',
+                            top: 'center',
+                            style: {
+                                text: `详细信息：\n${fakeData.info}`,
+                                fill: '#333',
+                                font: '14px Arial'
+                            }
+                        }
+                    ]
+                }
+            });
+        });
+    </script>
+</body>
+</html>
