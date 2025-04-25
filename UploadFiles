@@ -1,0 +1,22 @@
+from django.shortcuts import render
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from .forms import UploadFileForm
+import os
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            upload = request.FILES['file']
+            fs = FileSystemStorage(location=settings.MEDIA_ROOT)  # 自定义保存路径
+            filename = fs.save(upload.name, upload)  # 保存文件
+            file_url = fs.url(filename)  # 可用于模板中显示
+            return render(request, 'upload.html', {
+                'form': form,
+                'file_url': file_url,
+                'success': True
+            })
+    else:
+        form = UploadFileForm()
+    return render(request, 'upload.html', {'form': form})
