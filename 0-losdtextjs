@@ -1,0 +1,9 @@
+<input type="file" id="file">
+<script>
+document.getElementById('file').onchange = e => {
+  let f = e.target.files[0];
+  let r = new FileReader();
+  r.onload = () => console.log(r.result); // 这里就是string
+  r.readAsText(f);
+};
+</script>
