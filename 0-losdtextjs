@@ -17,3 +17,11 @@ console.log(text);
 <button onclick="fetch('file.txt').then(r => r.text()).then(t => console.log(t))">
   Load Txt
 </button>
+
+
+
+
+{% load static %}
+<button onclick="fetch('{% static "myfile.txt" %}').then(r => r.text()).then(t => console.log(t))">
+  Load Txt
+</button>
