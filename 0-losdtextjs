@@ -8,6 +8,12 @@ document.getElementById('file').onchange = e => {
 };
 </script>
 
+//Node.js env
 const fs = require('fs');
 let text = fs.readFileSync('file.txt', 'utf8');
 console.log(text);
+
+
+<button onclick="fetch('file.txt').then(r => r.text()).then(t => console.log(t))">
+  Load Txt
+</button>
